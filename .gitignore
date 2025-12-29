@@ -1,0 +1,55 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+*.env
+!.env.example
+!.env.template
+
+# Google OAuth credentials
+credentials.json
+credentials*.json
+!credentials.example.json
+token.json
+token.pickle
+*.token
+*.pickle
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+*.log.*
+
+# Security - никогда не коммитьте эти файлы!
+*.pem
+*.key
+*.cert
+*.crt
+secrets/
+.secrets/
+

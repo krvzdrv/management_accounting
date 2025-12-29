@@ -5,7 +5,7 @@
   "main": "update-scripts.js",
   "scripts": {
     "update": "node update-scripts.js",
-    "migrate": "node migrate-to-new-system.js",
+    "quick-update": "./quick-update.sh",
     "security-check": "node security-check.js",
     "pre-commit": "node security-check.js",
     "test": "node -e \"console.log('Testing...')\""

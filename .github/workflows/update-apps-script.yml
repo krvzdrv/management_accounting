@@ -1,0 +1,60 @@
+name: Update Apps Script
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '*.gs'
+      - 'update-scripts.js'
+      - 'package.json'
+  workflow_dispatch: # Позволяет запускать вручную
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Create .env file
+        run: |
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "GOOGLE_SCRIPT_ID=${{ secrets.GOOGLE_SCRIPT_ID }}" >> .env
+          echo "GITHUB_REPO_URL=${{ secrets.GITHUB_REPO_URL }}" >> .env
+          echo "GITHUB_BRANCH=main" >> .env
+      
+      - name: Create credentials.json
+        run: |
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+      
+      - name: Create token.json (if exists)
+        run: |
+          if [ -n "${{ secrets.GOOGLE_TOKEN }}" ]; then
+            echo '${{ secrets.GOOGLE_TOKEN }}' > token.json
+          fi
+        continue-on-error: true
+      
+      - name: Update Apps Script
+        run: npm run update
+        env:
+          NODE_ENV: production
+      
+      - name: Check update result
+        if: failure()
+        run: |
+          echo "❌ Обновление не удалось"
+          echo "Проверьте логи выше"
+          exit 1
+
